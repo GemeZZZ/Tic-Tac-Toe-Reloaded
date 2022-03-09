@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="Stylesheets/main.css">
+	<title></title>
+</head>
+<body>
+
+<div id="menus">
+	
+</div>
+
+<div id="board">
+	<div id="scores">
+		Current Player : X
+	</div>
+	<table>
+		<tr id="firstRow" class="row">
+			<td><button class="btns" id="btn0" onclick="btnClick('0')"></button></td>
+			<td><button class="btns" id="btn1" onclick="btnClick('1')"></button></td>
+			<td><button class="btns" id="btn2" onclick="btnClick('2')"></button></td>
+		</tr>
+		<tr id="secondRow" class="row">
+			<td><button class="btns" id="btn3" onclick="btnClick('3')"></button></td>
+			<td><button class="btns" id="btn4" onclick="btnClick('4')"></button></td>
+			<td><button class="btns" id="btn5" onclick="btnClick('5')"></button></td>
+		</tr>
+		<tr id="thirdRow" class="row">
+			<td><button class="btns" id="btn6" onclick="btnClick('6')"></button></td>
+			<td><button class="btns" id="btn7" onclick="btnClick('7')"></button></td>
+			<td><button class="btns" id="btn8" onclick="btnClick('8')"></button></td>
+		</tr>
+	</table>
+</div>
+
+</body>
+<script type="text/javascript">
+	
+	let player = "X";
+	let gameOver = false;
+	let board = [['','',''],['','',''],['','','']];
+
+	function fillBoard(id) {
+		var actual_id = parseInt(id);
+		if(actual_id < 3) {
+			board[0][actual_id] = player;
+		} else if(actual_id >= 3 && actual_id < 6) {
+			board[1][actual_id-3] = player;
+		} else {
+			board[2][actual_id-6] = player;
+		}
+	}
+
+	function addGlow(id1, id2, id3) {
+		var id = document.getElementById('btn'+id1);
+		id.classList.add("glow");
+		id = document.getElementById('btn'+id2);
+		id.classList.add("glow");
+		id = document.getElementById('btn'+id3);
+		id.classList.add("glow");
+	}
+
+	function checkWin() {
+
+		if(board[0][0] == board[0][1] && board[0][1] == board[0][2] && (board[0][0]=="X" || board[0][0] == "O")) {
+			var id = window.setTimeout(() => {
+				alert("Winner : "+player);
+			},50);
+			gameOver = true;
+			addGlow("0","1","2");
+		} else if(board[1][0] == board[1][1] && board[1][1] == board[1][2] && (board[1][0]=="X" || board[1][0] == "O")) {
+			var id = window.setTimeout(() => {
+				alert("Winner : "+player);
+			},50);
+			gameOver = true;
+			addGlow("3","4","5");
+		} else if(board[2][0] == board[2][1] && board[2][1] == board[2][2] && (board[2][0]=="X" || board[2][0] == "O")) {
+			var id = window.setTimeout(() => {
+				alert("Winner : "+player);
+			},50);
+			gameOver = true;
+			addGlow("6","7","8");
+		} else if(board[0][0] == board[1][0] && board[1][0] == board[2][0] && (board[0][0]=="X" || board[0][0] == "O")) {
+			var id = window.setTimeout(() => {
+				alert("Winner : "+player);
+			},50);
+			gameOver = true;
+			addGlow("0","3","6");
+		} else if(board[0][1] == board[1][1] && board[1][1] == board[2][1] && (board[0][1]=="X" || board[0][1] == "O")) {
+			var id = window.setTimeout(() => {
+				alert("Winner : "+player);
+			},50);
+			gameOver = true;
+			addGlow("1","4","7");
+		} else if(board[0][2] == board[1][2] && board[1][2] == board[2][2] && (board[0][2]=="X" || board[0][2] == "O")) {
+			var id = window.setTimeout(() => {
+				alert("Winner : "+player);
+			},50);
+			gameOver = true;
+			addGlow("2","5","8");
+		} else if(board[0][0] == board[1][1] && board[1][1] == board[2][2] && (board[0][0]=="X" || board[0][0] == "O")) {
+			var id = window.setTimeout(() => {
+				alert("Winner : "+player);
+			},50);
+			gameOver = true;
+			addGlow("0","4","8");
+		} else if(board[0][2] == board[1][1] && board[1][1] == board[2][0] && (board[0][2]=="X" || board[0][2] == "O")) {
+			var id = window.setTimeout(() => {
+				alert("Winner : "+player);
+			},50);
+			gameOver = true;
+			addGlow("2","4","6");
+		} else if(board[0][1] != '' && board[0][2] != '' && board[0][3] != '' && board[1][0] != '' && board[1][1] != '' && board[1][2] != '' && board[2][0] != '' && board[2][1] != '' && board[2][2] != '') {
+			var id = window.setTimeout(() => {
+				alert("Game is draw.");
+			},50);
+			gameOver = true;
+		}
+	}
+
+	function nextPlayer() {
+		if(player == "X") { // if player is "X"...
+			player = "O";  // set to "O"...
+		} else {
+			player = "X"; // else set to "X"...
+		}
+		var id = document.getElementById("scores");
+		id.innerHTML = "Current Player : "+player;
+	}
+
+	function btnClick(id) {
+		var elem = document.getElementById('btn'+id); // get the button...
+		if(elem.innerHTML == "" && !gameOver) { // if it is not filled....
+			elem.innerHTML = player; // fill it...
+			fillBoard(id);
+			checkWin();
+			if(!gameOver) {
+				nextPlayer(); // set next player...
+			} else {
+				var id = document.getElementById("scores");
+				id.innerHTML = "Game Over";
+			}
+		}
+	}
+
+</script>
+</html>
