@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Settings Menu For Tic-Tac-Toe Reloaded</title>
+	<link rel="stylesheet" type="text/css" href="Stylesheets/settings.css">
+</head>
+<body>
+
+	<div id="settingsMenu">
+		<label>Include Stats:</label>
+		<input type="checkbox" name="" value="viewStats" id="vieSta"><br>
+
+		<label>Show Win Counts:</label>
+		<input type="checkbox" name="" value="winCount" id="winCnt" onchange="fun()"><br>
+
+		<div id="incDraw" style="display: none;">
+			<label>Include Draws:</label>
+			<input type="checkbox" name="" value="incDraws" id="incDrw"><br>
+		</div>
+
+		<label>Clear Stats Report:</label>
+		<input type="checkbox" name="" value="statsRep" id="staRep"><br>
+
+		<button onclick="show()">Save And Play</button>
+	</div>
+
+</body>
+<script type="text/javascript">
+
+	function fun() {
+		let id;
+		if(winCnt.checked == true) {
+			id = document.getElementById("incDraw");
+			id.classList.add("visible");
+		} else {
+			id = document.getElementById("incDraw");
+			id.classList.remove("visible");
+		}
+	}
+
+	function show() {
+		if(staRep.checked == false) {
+			let fetch_settings = localStorage.getItem("settings_Tic");
+			settings = JSON.parse(fetch_settings);
+
+			if(winCnt.checked == true) {
+				// alert("Win Count is selected!");
+				settings[0].winCount = true;
+
+			} 
+
+			if (incDrw.checked == true) {
+				// alert("Include Draw is selected!!");
+				settings[0].includeDraw = true;
+			}
+
+			if (vieSta.checked == true) {
+				settings[0].viewStats = true;
+			}
+
+			console.log(settings);
+			let store = localStorage.setItem('settings_Tic',JSON.stringify(settings));
+			window.location = "main.html";
+		} else {
+			// console.log("Clear Choice.")
+			let store = localStorage.removeItem("settings_Tic");
+				settings = [{
+				winCount: false,
+				includeDraw: false,
+				viewStats: false,
+				xWin : 0,
+				oWin : 0,
+				draw : 0,
+				lastWin : "X",
+				lastDraw : false
+			}];
+			store = localStorage.setItem('settings_Tic',JSON.stringify(settings));
+			window.location = "../index.html";
+		}
+	}
+</script>
+
+</html>

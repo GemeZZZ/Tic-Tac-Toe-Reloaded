@@ -12,10 +12,22 @@
 	
 </div>
 
+<!-- Game Board Is Here -->
 <div id="board">
+	<!-- Score Panle Is Here -->
 	<div id="scores">
-		Current Player : X
+		<!-- Main Result Panel, where the current player will be shown -->
+		<div id="main_result">
+			Current Player : X
+		</div>
+		<!-- Result Panel, where the navigation will be shown as soon as the game is over -->
+		<div id="result" class="invisible">
+			<button onclick="restart()">Restart</button>
+			<button onclick="nextRound()">Next Round</button>
+		</div>
 	</div>
+
+	<!-- Main Game Board Is Here -->
 	<table>
 		<tr id="firstRow" class="row">
 			<td><button class="btns" id="btn0" onclick="btnClick('0')"></button></td>
@@ -33,15 +45,73 @@
 			<td><button class="btns" id="btn8" onclick="btnClick('8')"></button></td>
 		</tr>
 	</table>
+	<!-- Main Game Board Ends Over Here -->
+
+	<!-- Stats Panel Is Here -->
+	<div id="stats">
+		<div id="counts">
+			Win Count <br>
+			X : 5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;O:10
+		</div>
+		<div id="draws">
+			Draws : 0
+		</div>
+	</div>
 </div>
 
 </body>
 <script type="text/javascript">
 	
-	let player = "X";
-	let gameOver = false;
-	let board = [['','',''],['','',''],['','','']];
+	// local progress....
+	let player = "X"; // current player...
+	let draw = false;
+	let gameOver = false; // to determine whether the game is over or not?...
+	let board = [['','',''],['','',''],['','','']]; // game board copy to detect game over...
 
+	// when the page is loaded...
+	window.onload = function(argument) {
+		// from previosly stored data, progress and settings will be fetched...
+		let fetch_settings = localStorage.getItem("settings_Tic");
+		let settings = JSON.parse(fetch_settings);
+		let id;
+
+		// restoring counts and draws....
+		id = document.getElementById("counts");
+		id.innerHTML = "Win Count <br>X : "+settings[0].xWin+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;O:"+settings[0].oWin;
+		id = document.getElementById("draws");
+		id.innerHTML = "Draws : "+settings[0].draw;
+
+		if(settings[0].lastDraw == true) {
+			if (settings[0].lastWin == "X") {
+				player = "O";
+			} else {
+				player = "X";
+			}
+		} else {
+			player = settings[0].lastWin;
+		}
+		id = document.getElementById("main_result");
+		id.innerHTML = "Current Player : "+player;
+
+		// according the settings, display will be change...
+		if(settings[0].winCount == false) {
+			id = document.getElementById("stats");
+			id.classList.add("invisible");
+		}
+
+		if(settings[0].includeDraw == false) {
+			id = document.getElementById("draws");
+			id.classList.add("invisible");
+		}
+
+		if(settings[0].viewStats == false) {
+			id = document.getElementById("scores");
+			id.classList.add("invisible");
+		}
+	}
+
+	// this function is responsible to fill X or O in particular cell in board....
+	// it takes id no of the cell in board....
 	function fillBoard(id) {
 		var actual_id = parseInt(id);
 		if(actual_id < 3) {
@@ -53,6 +123,7 @@
 		}
 	}
 
+	// this function will highlight the cells, if victory is there....
 	function addGlow(id1, id2, id3) {
 		var id = document.getElementById('btn'+id1);
 		id.classList.add("glow");
@@ -62,6 +133,7 @@
 		id.classList.add("glow");
 	}
 
+	// this function is responsible for checking the winner...
 	function checkWin() {
 
 		if(board[0][0] == board[0][1] && board[0][1] == board[0][2] && (board[0][0]=="X" || board[0][0] == "O")) {
@@ -116,20 +188,24 @@
 			var id = window.setTimeout(() => {
 				alert("Game is draw.");
 			},50);
+			draw = true;
 			gameOver = true;
 		}
 	}
 
+	// this functions is responsible for changing next player...
 	function nextPlayer() {
 		if(player == "X") { // if player is "X"...
 			player = "O";  // set to "O"...
 		} else {
 			player = "X"; // else set to "X"...
 		}
-		var id = document.getElementById("scores");
+		var id = document.getElementById("main_result");
 		id.innerHTML = "Current Player : "+player;
 	}
 
+	// this function will create game like flow...when clicking on cell of a board....
+	// it will act as work distributor for rest all other functions...
 	function btnClick(id) {
 		var elem = document.getElementById('btn'+id); // get the button...
 		if(elem.innerHTML == "" && !gameOver) { // if it is not filled....
@@ -139,10 +215,45 @@
 			if(!gameOver) {
 				nextPlayer(); // set next player...
 			} else {
-				var id = document.getElementById("scores");
+				var id = document.getElementById("main_result");
 				id.innerHTML = "Game Over";
+				id = document.getElementById("result");
+				id.classList.remove("invisible");
 			}
 		}
+	}
+
+	// restart function will clear previously stored data and start fresh...
+	function restart() {
+		window.location = "main.html";
+		let fetch_settings = localStorage.getItem("settings_Tic");
+		let settings = JSON.parse(fetch_settings);
+		settings[0].xWin = 0;
+		settings[0].oWin = 0;
+		settings[0].draw = 0;
+		let store = localStorage.setItem("settings_Tic",JSON.stringify(settings));
+		window.location = "main.html";
+	}
+
+
+	// this function will update data and go for next round..
+	function nextRound() {
+		let fetch_settings = localStorage.getItem("settings_Tic");
+		let settings = JSON.parse(fetch_settings);
+		if (draw == true){
+			settings[0].draw += 1;
+			settings[0].lastDraw = true;
+		} else if(player == "X") {
+			settings[0].xWin += 1;
+			settings[0].lastWin = "X";
+			settings[0].lastDraw = false;
+		} else if(player == "O") {
+			settings[0].oWin += 1;
+			settings[0].lastWin = "O";
+			settings[0].lastDraw = false;
+		}
+		let store = localStorage.setItem("settings_Tic",JSON.stringify(settings));
+		window.location = "main.html";
 	}
 
 </script>

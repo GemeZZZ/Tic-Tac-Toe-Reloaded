@@ -44,7 +44,7 @@
 	background-color: blue!important;
 }
 
-#scores {
+#scores,#stats {
 	position: absolute;
 	top: 0%;
 	left: 50%;
@@ -58,4 +58,12 @@
 	justify-content: center;
 	align-content: center;
 	text-align: center;
+}
+
+#stats {
+	top: 100%;
+}
+
+.invisible {
+	display: none;
 }

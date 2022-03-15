@@ -3,11 +3,37 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="Resources/Stylesheets/index.css">
 	<title>Tic Tac Toe - Reloaded</title>
 </head>
 <body>
 
-<button><a href="Resources/main.html"> Start Game </a></button>
+<div id="main_menu">
+	<ul>
+		<li><a href="Resources/main.html" class="btn">Start Game</a></li>
+		<li><a href="Resources/Settings.html" class="btn">Options</a></li>
+	</ul>
+</div>
 
 </body>
+<script type="text/javascript">
+	
+	window.onload = function() {
+		settings = [{
+			winCount: false,
+			includeDraw: false,
+			viewStats: false,
+			xWin : 0,
+			oWin : 0,
+			draw : 0,
+			lastWin : null,
+			lastDraw : false
+		}];
+		let store=localStorage.getItem('settings_Tic');
+		if(store == null) {
+			store = localStorage.setItem('settings_Tic',JSON.stringify(settings));
+		}
+	}
+
+</script>
 </html>
