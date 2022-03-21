@@ -79,11 +79,11 @@
 
 		var totalGame = settings[0].xWin+settings[0].oWin+settings[0].draw;
 		localId = document.getElementById('RateO');
-		localId.innerHTML = (settings[0].oWin)/(totalGame)*100 + "%";
+		localId.innerHTML = Math.round((settings[0].oWin)/(totalGame)*100) + "%";
 		localId = document.getElementById('RateX');
-		localId.innerHTML = (settings[0].xWin)/(totalGame)*100 + "%";
+		localId.innerHTML = Math.round((settings[0].xWin)/(totalGame)*100) + "%";
 		localId = document.getElementById('RateD');
-		localId.innerHTML = (settings[0].draw)/(totalGame)*100 + "%";
+		localId.innerHTML = Math.round((settings[0].draw)/(totalGame)*100) + "%";
 
 		let id = document.getElementById('statsReport');
 		id.classList.remove("invisible");
