@@ -12,9 +12,9 @@
 	
 </div>
 
-<!-- Game Board Is Here -->
+<!-- ========== Game Board Is Here ========== -->
 <div id="board">
-	<!-- Score Panle Is Here -->
+	<!-- ========== Score Panle Is Here ========== -->
 	<div id="scores">
 		<!-- Main Result Panel, where the current player will be shown -->
 		<div id="main_result">
@@ -27,7 +27,7 @@
 		</div>
 	</div>
 
-	<!-- Main Game Board Is Here -->
+	<!-- ========== Main Game Board Is Here ==========  -->
 	<table>
 		<tr id="firstRow" class="row">
 			<td><button class="btns" id="btn0" onclick="btnClick('0')"></button></td>
@@ -45,9 +45,9 @@
 			<td><button class="btns" id="btn8" onclick="btnClick('8')"></button></td>
 		</tr>
 	</table>
-	<!-- Main Game Board Ends Over Here -->
+	<!-- ========== Main Game Board Ends Over Here ========== -->
 
-	<!-- Stats Panel Is Here -->
+	<!-- ========== Stats Panel Is Here ========== -->
 	<div id="stats">
 		<div id="counts">
 			Win Count <br>
@@ -64,9 +64,9 @@
 	
 	// local progress....
 	let player = "X"; // current player...
-	let draw = false;
+	let draw = false; // to determine whether the game is draw or not?...
 	let gameOver = false; // to determine whether the game is over or not?...
-	let board = [['','',''],['','',''],['','','']]; // game board copy to detect game over...
+	let board = [['','',''],['','',''],['','','']]; // game board copy, to detect game over and keep track of progress...
 
 	// when the page is loaded...
 	window.onload = function(argument) {
@@ -75,25 +75,26 @@
 		let settings = JSON.parse(fetch_settings);
 		let id;
 
-		// restoring counts and draws....
+		// restoring counts and draws.... =======================================
 		id = document.getElementById("counts");
 		id.innerHTML = "Win Count <br>X : "+settings[0].xWin+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;O:"+settings[0].oWin;
 		id = document.getElementById("draws");
 		id.innerHTML = "Draws : "+settings[0].draw;
 
-		if(settings[0].lastDraw == true) {
-			if (settings[0].lastWin == "X") {
+		// restoring the player.... ==============================================
+		if(settings[0].lastDraw == true) { // if last match was draw....
+			if (settings[0].lastWin == "X") { // change the players...
 				player = "O";
 			} else {
 				player = "X";
 			}
-		} else {
+		} else { // otherwise the last winner would be given chance...
 			player = settings[0].lastWin;
 		}
 		id = document.getElementById("main_result");
 		id.innerHTML = "Current Player : "+player;
 
-		// according the settings, display will be change...
+		// according the settings, display will be change... =====================
 		if(settings[0].winCount == false) {
 			id = document.getElementById("stats");
 			id.classList.add("invisible");

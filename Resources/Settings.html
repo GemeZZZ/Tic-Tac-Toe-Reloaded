@@ -8,6 +8,7 @@
 </head>
 <body>
 
+	<!-- ========== Menu Starts From Here ========== -->
 	<div id="settingsMenu">
 		<label>Include Stats:</label>
 		<input type="checkbox" name="" value="viewStats" id="vieSta"><br>
@@ -20,15 +21,80 @@
 			<input type="checkbox" name="" value="incDraws" id="incDrw"><br>
 		</div>
 
-		<label>Clear Stats Report:</label>
-		<input type="checkbox" name="" value="statsRep" id="staRep"><br>
-
+		<button onclick="clearAndHome()">Clear Stats Report</button> <br>
+		<button onclick="showReport()">Show Statics Report</button>
+		<input type="checkbox" name="" value="statsRep" id="staRep" hidden><br>
 		<button onclick="show()">Save And Play</button>
+
+		<div id="statsReport" class="invisible">
+			
+			<h1><b>The Statistics Report Is Here!</b></h1>
+			<div class="box"><label>Total Wins Of O</label><div id="TotalO" class="data"></div></div>
+			<div class="box"><label>Total Wins Of X</label><div id="TotalX" class="data"></div></div>
+			<div class="box"><label>Total Draw Matches</label><div id="TotalD" class="data"></div></div>
+			<div class="box"><label>Win Rate Of O</label><div id="RateO" class="data"></div></div>
+			<div class="box"><label>Win Rate Of X</label><div id="RateX" class="data"></div></div>
+			<div class="box"><label>Game Draw Rate</label><div id="RateD" class="data"></div></div>
+
+		</div>
+
 	</div>
+	<!-- ========== Menu Ends From Here ========== -->
 
 </body>
 <script type="text/javascript">
 
+
+	// when the window is loaded....
+	window.onload = function() {
+
+		let fetch_settings = localStorage.getItem("settings_Tic");
+		let settings = JSON.parse(fetch_settings);
+		// fetch and reflect current settings...
+		if(settings[0].winCount == true) {
+			winCnt.checked = true;
+			fun();
+		}
+
+		if(settings[0].includeDraw == true) {
+			incDrw.checked = true;
+		}
+
+		if(settings[0].viewStats == true) {
+			vieSta.checked = true;
+		}
+
+	}
+
+	function showReport() {
+		let fetch_settings = localStorage.getItem('settings_Tic');
+		let settings = JSON.parse(fetch_settings);
+
+		let localId = document.getElementById('TotalO');
+		localId.innerHTML = settings[0].oWin;
+		localId = document.getElementById('TotalX');
+		localId.innerHTML = settings[0].xWin;
+		localId = document.getElementById('TotalD');
+		localId.innerHTML = settings[0].draw;
+
+		var totalGame = settings[0].xWin+settings[0].oWin+settings[0].draw;
+		localId = document.getElementById('RateO');
+		localId.innerHTML = (settings[0].oWin)/(totalGame)*100 + "%";
+		localId = document.getElementById('RateX');
+		localId.innerHTML = (settings[0].xWin)/(totalGame)*100 + "%";
+		localId = document.getElementById('RateD');
+		localId.innerHTML = (settings[0].draw)/(totalGame)*100 + "%";
+
+		let id = document.getElementById('statsReport');
+		id.classList.remove("invisible");
+	}
+
+	function clearAndHome() {
+		staRep.checked = true;
+		show();
+	}
+
+	// clicking on "Show Win Count" will trigger this functions...
 	function fun() {
 		let id;
 		if(winCnt.checked == true) {
@@ -40,15 +106,16 @@
 		}
 	}
 
+	// clicking on "Save and Play" will trigger this function...
 	function show() {
-		if(staRep.checked == false) {
-			let fetch_settings = localStorage.getItem("settings_Tic");
+		if(staRep.checked == false) { // if user don't want to clear statictics report...
+			let fetch_settings = localStorage.getItem("settings_Tic"); // fetch the settings....
 			settings = JSON.parse(fetch_settings);
 
+			// do required changes....
 			if(winCnt.checked == true) {
 				// alert("Win Count is selected!");
 				settings[0].winCount = true;
-
 			} 
 
 			if (incDrw.checked == true) {
@@ -60,24 +127,24 @@
 				settings[0].viewStats = true;
 			}
 
-			console.log(settings);
+			// save the settings are go to game...
 			let store = localStorage.setItem('settings_Tic',JSON.stringify(settings));
 			window.location = "main.html";
-		} else {
-			// console.log("Clear Choice.")
-			let store = localStorage.removeItem("settings_Tic");
+		} else { // if user want to clear the staticstic report...
+			let store = localStorage.removeItem("settings_Tic"); // remove old object....
 				settings = [{
-				winCount: false,
+				winCount: true,
 				includeDraw: false,
-				viewStats: false,
+				viewStats: true,
 				xWin : 0,
 				oWin : 0,
 				draw : 0,
 				lastWin : "X",
 				lastDraw : false
 			}];
+			// create new one...
 			store = localStorage.setItem('settings_Tic',JSON.stringify(settings));
-			window.location = "../index.html";
+			window.location = "../index.html";// go to home page...
 		}
 	}
 </script>

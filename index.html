@@ -8,17 +8,21 @@
 </head>
 <body>
 
+<!-- ========== Main Menu Starts From Here ========== -->
 <div id="main_menu">
 	<ul>
 		<li><a href="Resources/main.html" class="btn">Start Game</a></li>
 		<li><a href="Resources/Settings.html" class="btn">Options</a></li>
 	</ul>
 </div>
+<!-- ========== Main Menu Ends From Here ========== -->
 
 </body>
 <script type="text/javascript">
 	
+	// when window is loaded...
 	window.onload = function() {
+		// JSON object for local storage is created...
 		settings = [{
 			winCount: false,
 			includeDraw: false,
@@ -26,12 +30,12 @@
 			xWin : 0,
 			oWin : 0,
 			draw : 0,
-			lastWin : null,
+			lastWin : "X",
 			lastDraw : false
 		}];
-		let store=localStorage.getItem('settings_Tic');
-		if(store == null) {
-			store = localStorage.setItem('settings_Tic',JSON.stringify(settings));
+		let store=localStorage.getItem('settings_Tic'); // checking whether the object already exist or not?
+		if(store == null) { // if object doesn't exist...
+			store = localStorage.setItem('settings_Tic',JSON.stringify(settings)); // storing new one...
 		}
 	}
 
